@@ -1,0 +1,113 @@
+/* MySite 企業旗艦版樣式表
+   維護守則：新增規則一律加在檔案最下面，並且加 !important，以免被上面的蓋掉。
+   上一次重構：2020-11，結論是「先不要動」。 */
+
+:root { --primary: #2b6cb0; --bg: #fff; --fg: #222; --gap: 16px; --z: 9999; }
+[data-theme="dark"] { --bg: #111 !important; --fg: #eee; --primary: #2b6cb0; }
+:root { --primary: #3b82f6; } /* 設計師改過，但上面那行有人又加回來了 */
+body { --bg: #fafafa; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--fg); font-family: -apple-system, "PingFang TC", sans-serif; }
+body.body--v2 { background: var(--bg) !important; }
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline !important; }
+.muted { color: #999; font-size: 12px; }
+.hidden { display: none !important; }
+
+.site-header { position: sticky; top: 0; z-index: var(--z); background: var(--bg); border-bottom: 1px solid #eee; }
+.header-inner { display: flex; align-items: center; gap: var(--gap); padding: 12px 16px; flex-wrap: wrap; }
+.brand { font-weight: 700; font-size: 18px; }
+.search { flex: 1 1 180px; min-width: 120px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 999px; }
+.search--old { flex: 0 0 140px; border-radius: 2px !important; }
+.nav { display: flex; gap: 12px; }
+#search:focus { outline: 2px solid var(--primary) !important; outline-offset: 1px; }
+#search.search--active { border-color: var(--primary) !important; }
+
+#reading-progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--primary); z-index: 2147483646 !important; transition: width .1s; }
+
+.app { max-width: 900px; margin: 0 auto; padding: 24px 16px 80px; }
+.loading { text-align: center; padding: 48px; color: #888; }
+.skeleton div { height: 18px; margin: 12px 0; border-radius: 4px; background: linear-gradient(90deg, #eee, #f6f6f6, #eee); animation: shim 1.2s infinite; }
+@keyframes shim { 0% { opacity: .6 } 50% { opacity: 1 } 100% { opacity: .6 } }
+
+.card { padding: 16px; margin: 0 0 16px; border: 1px solid #e5e5e5; border-radius: 12px; background: var(--bg); }
+.card h2 { margin: 0 0 8px; font-size: 17px; }
+.card .meta { font-size: 12px; color: #999; }
+.card p { line-height: 1.7; }
+#app > div > div > span { color: #666; } /* 當年為了改一顆字加的，現在不知道改到誰 */
+.card { border-radius: 8px !important; } /* 復原上一行，但用 !important 覆蓋，所以其實沒復原 */
+
+.btn { padding: 6px 14px; border: 1px solid var(--primary); border-radius: 6px; background: transparent; color: var(--primary); cursor: pointer; }
+.btn--primary { background: var(--primary) !important; color: #fff !important; }
+.btn--ghost { border-color: transparent !important; }
+
+.cookie-wall { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999999; padding: 12px 16px; background: #222; color: #fff; display: flex; gap: 12px; align-items: center; }
+.cookie-wall button { background: #fff; border: 0; padding: 6px 10px; border-radius: 4px; }
+#toast-root { position: fixed; right: 16px; bottom: 76px; z-index: 9999999; }
+.toast { margin-top: 8px; padding: 10px 14px; background: #333; color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+#modal-root { position: fixed; inset: 0; z-index: 99999999; background: rgba(0,0,0,.5); display: grid; place-items: center; }
+#chat-widget { position: fixed; right: 16px; bottom: 16px; z-index: 2147483000; }
+#chat-bubble { width: 48px; height: 48px; border-radius: 50%; background: var(--primary); display: grid; place-items: center; cursor: pointer; }
+#chat-panel { width: 240px; padding: 12px; background: var(--bg); border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; }
+#ad-slot { position: fixed; left: 8px; top: 40%; writing-mode: vertical-rl; color: #bbb; font-size: 11px; }
+#back-to-top { position: fixed; right: 16px; bottom: 76px; z-index: 999998; }
+.site-footer { border-top: 1px solid #eee; padding: 20px 16px; }
+.footer-inner { max-width: 900px; margin: 0 auto; display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* RWD：三份媒體查詢，條件互相重疊 */
+@media (max-width: 768px) { .header-inner { padding: 10px; } .nav { flex-direction: column; } }
+@media (max-width: 720px) { .search--old { display: none !important; } }
+@media (max-width: 767px) { .card { padding: 12px !important; } }
+@media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #eee; } } /* 和 data-theme 打架，由 A/B 組別決定誰贏 */
+
+/* 以下 40 行是 2022 年「主題商店」留下的，目前沒有任何按鈕會套用 */
+.theme-neon { --primary: #f0f; }
+.theme-sepia { --bg: #f4ecd8; }
+.theme-corporate { --primary: #003366; }
+.theme-unused-1, .theme-unused-2, .theme-unused-3 { display: none; }
+/* ...省略 36 行... */
+
+/* ===== 2026-11 第二輪追加區：以上一行都沒動 ===== */
+.comment { padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 14px; }
+.poll-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+.poll-track { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+.poll-track i { display: block; height: 100%; background: var(--primary); transition: width .3s; }
+#poll-root, #recommend-root, #comments-1, #reading-root, #tts-bar { max-width: 900px; margin: 0 auto 16px; padding: 0 16px; }
+#tts-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+#tts-bar button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px; background: var(--bg); }
+.cmd-root { position: fixed !important; top: 12%; left: 50%; transform: translateX(-50%); z-index: 2147483640 !important; width: min(420px, 90vw); background: var(--bg); border: 1px solid #ccc; border-radius: 12px; padding: 12px; box-shadow: 0 12px 40px rgba(0,0,0,.25); }
+.cmd-root input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+.cmd-root ul { list-style: none; padding: 0; margin: 8px 0 0; max-height: 240px; overflow: auto; }
+.cmd-root li { padding: 8px; cursor: pointer; border-radius: 4px; }
+.cmd-root li:hover { background: #f0f0f0 !important; }
+
+/* 上面 .card 已經被兩處 !important 改過，這裡再補第三處，順序決定勝負 */
+.card { border-radius: 14px !important; }
+#ad-slot img { opacity: .4; margin-top: 8px; }
+
+/* 第四份 RWD，條件與前三份重疊 */
+@media (max-width: 760px) { .cmd-root { top: 6% !important; } #tts-bar { justify-content: center; } }
+@media (max-width: 768px) { .poll-row { flex-wrap: wrap !important; } }
+
+/* 新增 24 行「之後要做的元件」樣式，目前沒有對應 DOM */
+.badge-new, .avatar-stack, .tag-pill, .toast--success, .toast--warn, .skeleton--card { /* TODO */ }
+/* ...再省略 18 行... */
+
+/* ===== 2026-11 第三輪追加區：以上一行都沒動，以下全部是新加的（依維護守則一律 !important） ===== */
+#notifications-root, #cart-root, #pagination-root, #dashboard-root, #gamify-root { max-width: 900px; margin: 0 auto 14px; padding: 0 16px; }
+.nc-head { font-weight: 700 !important; margin-bottom: 6px; }
+.nc-item { padding: 4px 8px; border-left: 3px solid #bbb; margin: 2px 0; font-size: 13px; background: rgba(0,0,0,.03) !important; }
+.cart-box { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px; border: 1px dashed #999; border-radius: 10px; }
+.cart-box button { padding: 6px 12px; border-radius: 6px; border: 1px solid #ddd; background: var(--bg); cursor: pointer; }
+.pager { display: flex; gap: 10px; align-items: center; justify-content: center; }
+.pager button { padding: 6px 14px; border: 1px solid #ccc; border-radius: 8px; background: var(--bg); }
+.dash { font-family: ui-monospace, monospace; font-size: 12px; padding: 8px 12px; background: #111; color: #0f0; border-radius: 8px; }
+.gamify { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 13px; }
+.ach { padding: 4px 8px; border-radius: 999px; border: 1px solid #ddd; opacity: .5; }
+.ach.on { opacity: 1 !important; background: gold !important; color: #222 !important; }
+[data-i18n-v3] { border-bottom: 1px dotted #999; }
+[data-lang-v3="fr"] body { letter-spacing: .2px; } /* 法文模式：只是加字距，翻譯照舊混用 */
+.card { border-radius: 18px !important; } /* 第五處 .card 圓角；順序決定勝負，前面的四處都還在 */
+@media (max-width: 760px) { .dash { font-size: 10px !important; } .pager { flex-direction: column; } }

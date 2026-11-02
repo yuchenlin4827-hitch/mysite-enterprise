@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    ports: ["8080:80"]
+    environment:
+      - MYSITE_CONFIG={"env":"PROD","apiBase":"https://api.mysite.internal/v3/","debug":true}
+    # 上面這行 YAML 其實不合法，但 compose 會警告後繼續（第 22 號債）
+  api-mock:
+    image: nginx:alpine
+    volumes:
+      - ./mock:/usr/share/nginx/html:ro
+    ports: ["8081:80"]
+  analytics:
+    image: nginx:alpine
+    ports: ["8082:80"]
+    # 沒有 volumes，送過去的 pixel 全部 404，報表依舊有數字
+
+# 備用服務（2022 QA 用，沒人關過）
+  vite:
+    image: node:20
+    command: npm run dev:vite
+    ports: ["5173:5173"]
+    profiles: ["legacy"]

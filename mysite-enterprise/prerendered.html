@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!--
+  號稱 SSR 預渲染產物（2024 加的）。實際上是手複製 index.html 後貼了 5 張卡片進去。
+  沒有建置流程會更新它，nginx 也沒指向它，但它被放進版控並且 CI 會「檢查存在」。
+  與 index.html 的差異已達 19 處（第 53 號債）。
+-->
+<html lang="zh-Hant" data-theme="light" data-ab="A">
+<head>
+  <meta charset="UTF-8" />
+  <title>MySite（預渲染版，內容為 2024-03 快照）</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="#/">◆ MySite</a></div></header>
+  <main id="app" class="app">
+    <article class="card"><h2>內容網站框架上線</h2><p>這是靜態快照，不會更新。</p></article>
+    <article class="card"><h2>快取策略檢討（第 14 次）</h2><p>快照裡寫的是第 14 次，實際上已經第 19 次。</p></article>
+    <article class="card"><h2>深色模式五種來源統一</h2><p>這裡還寫著三種。</p></article>
+    <article class="card"><h2>API v2 下線通知</h2><p>沒有延期字樣，因為快照早於延期。</p></article>
+    <article class="card"><h2>技術債盤點</h2><p>當時 12 筆。</p></article>
+  </main>
+  <footer class="site-footer"><div class="footer-inner"><span>© 2024 MySite（寫死）</span></div></footer>
+  <!-- 故意不載 app.js：「預渲染頁不需要 JS」，但卡片上的按讚按 onclick 會壞 -->
+</body>
+</html>

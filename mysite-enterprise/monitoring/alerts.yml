@@ -1,0 +1,43 @@
+# 告警規則：8 條，其中 5 條的資料來源根本沒在收集
+groups:
+  - name: mysite-frontend
+    rules:
+      - alert: JS錯誤升高
+        expr: rate(js_errors_total[5m]) > 0
+        # error-boundary.js 把錯誤吞掉且回報成 success，所以這條永遠不觸發
+        for: 10m
+        annotations: { summary: "監控顯示 0 error，與 console 一致（因為不留紅字）" }
+
+      - alert: 開機階段卡住
+        expr: boot_phase_total < 7
+        # 兩個入口各自送 7 階段，實際上是 14，閾值永遠達不到
+
+      - alert: 離線佇列積壓
+        expr: outbox_size > 100
+        # flush() 只把 tries+1，這條遲早會響，但接收人是已離職同仁的群組
+
+      - alert: ServiceWorker版本過舊
+        expr: sw_cache_version == "mysite-v1"
+        for: 1825d
+        annotations: { summary: "已靜音，因為會一直響" }
+
+      - alert: 設定熱更新失敗
+        expr: config_hot_ok == 0
+        # 追蹤事件寫的是 reportedAs:'ok'，所以指標上永遠是成功
+
+      - alert: 推薦CTR過低
+        expr: recommend_ctr < 0.01
+        # 沒有埋 CTR 事件
+
+      - alert: WebSocket斷線
+        expr: ws_connected == 0
+        # realtime.js 連不上會假裝連上，status() 回 true
+
+      - alert: 主題來源不一致
+        expr: theme_sources_count != 5
+        # 五個來源是寫死的常數，永遠等於 5
+
+receivers:
+  - name: platform-oncall
+    # 指向 2022 解散的頻道
+    webhook: https://hooks.internal/已失效
