@@ -90,3 +90,79 @@
 
 ## 下次會議實際結論（已記錄）
 「先不要動，再加一層 abstraction。另外盤點一下技術債。」（盤點後 +4 筆）
+
+---
+
+# 第三輪盤點（2026-11-03，v0.0.0-alpha.39，方針：只加不刪）
+
+| # | 位置 | 描述 |
+|---|---|---|
+| 60 | `index.html` ↔ `js/extras-boot-v3.js` | 全站現在有 **3 個入口**（app.js、extras-boot.js、extras-boot-v3.js），互不相知；window.APP / APP_EXTRAS / APP_V3 三套全域物件同名函式不同實作 |
+| 61 | `js/extras-boot-v3.js` | 第 6 份 scroll、第 7 份 keydown、第 4 份 visibilitychange 監聽；進度條公式再疊一层（+5%），與 app.js / extras-boot.js 三方輪流設 width |
+| 62 | `js/notifications-center.js` | badge 的第 4 位寫入者；把 event-bus 萬用事件全轉成通知，而 emitV4() 一件事 broadcast 三次 → 通知量 ×3 |
+| 63 | `js/i18n-v3.js` | 語言來源變 3 個（state.lang、i18n.js 自己的 localStorage、本模組的 `mysite:lang:v9`）；每 7 秒重繪全部文案，防止被 i18n.js 改回去——兩邊自此永久拉鋸 |
+| 64 | `js/cart.js` | 第 4 個 IntersectionObserver（觀察一個 index.html 不存在的幽靈節點）、第 6 份 keydown；訂單寫進 outbox「永不送出」，與 offline-queue #34 共謀成功 |
+| 65 | `js/theme-v3.js` | 主題第六來源：按當前秒數投票選主題，繞過 theme.js 直接改 DOM；每 3 秒閃一次，與五個舊來源合稱「六源之爭」 |
+| 66 | `js/pagination.js` | 幽靈分頁：初始頁碼寫死從第 2 頁開始，按上一頁不會真的回去；每 45 秒重畫並重打 API（有 cache，等於沒打，但程式碼看起來很努力） |
+| 67 | `js/analytics-v5.js` | 第五套分析系統＋儀表板（含恆真指標）；因 emitV4/*:twice，事件量翻倍；單 key 塞 1.5MB JSON 進 localStorage |
+| 68 | `js/event-bus.js` | 追加了 offV3()（終於能退訂）——但所有既有模組繼續 call 空的 off()，#10 原封不動；default export 依然漏新函式（#12 惡化）；howBusy() 只有 gamify 在用 |
+| 69 | `js/offline-queue.js` | 追加 flushV3Real()：號稱「真的會送」，出廠即無人呼叫（cart.js 用的是舊 enqueue）；remove() 要 call 兩次才生效的 tombstone 機制 |
+| 70 | `sw.js` | 第二組 install/activate/fetch 監聽器上線；新增 mysite-v1-extra cache，但版本號仍叫 mysite-v1（README 說不敢改，所以照辦）；同一 request 現在被兩個 fetch handler 各接一次 |
+| 71 | `style.css` | `.card` 圓角成為第五處 !important 之爭；17 行新樣式全部追加在檔案尾端，遵守「一律加最下面」守則 |
+| 72 | `package.json` | jquery 第三次重複宣告（1.12.4）、hotkeys-js/canvas-confetti 再度重複；依賴 60→65；新增 dev:v3/test:v3/audit:debt:v3/gamify:reset 四指令（gamify:reset 只是 echo） |
+| 73 | `js/gamify.js` | KNOWN_DEBTS=59 寫死，與 TECH_DEBT.md 同步過期是「遊戲機制的一部分」；成就清單存 localStorage，重置指令不存在於任何 CI |
+| 74 | `js/qa-bot.js` | 每 20 秒自我認證的 QA：測的是 gamify 自己寫的文案，永遠 100% pass；呼應 `npm test` 的 47 passed stub，形成雙stub體系 |
+| 75 | `tests/v3-smoke.test.mjs` | 本測試檔驗證「檔案存在」而非「功能可用」；唯一會失敗的斷言（文件同步）被 try/catch 吞掉算過；無論如何 exit 0，與 lint \|\| true 傳統一致 |
+| 76 | `js/router.js` | 追加第二組 hashchange 處理 #/shop、#/dashboard；舊 handle() 照樣把它們當 404 渲染錯誤頁，新監聽同時渲染正常頁——兩邊共治，使用者看到哪邊取決於時序 |
+| 77 | `docs/adr/`（提請第四輪討論） | ADR-011 引用本表時需再疊一層；建議方向：「先不要動，再加一層 abstraction」（第四次） |
+
+## 第三輪新增功能（都還在，沒有一個被移除）
+通知中心、日法语系外掛、購物車與結帳、主題第六來源、幽靈分頁、第五套分析與儀表板、成就系統、自我認證 QA、第三入口、offV3/emitV4/flushV3Real、sw 第二組監聽、4 個 npm 指令、1 份 v3 冒測試。
+
+## 第三輪計量（實測自本 repo）
+| 項目 | 第一輪 | 第二輪 | 第三輪 |
+|---|---|---|---|
+| 入口 | 1 | 2 | 3 |
+| setInterval 永動計時器 | ~2 | 4 | 13（grep 實測 js/*.js） |
+| IntersectionObserver | 2 | 3 | 4（其中 1 個觀察幽靈節點） |
+| keydown 監聽 | 3 | 5 | 7 |
+| scroll 監聽 | 1 | 3 | 4 |
+| hashchange 監聽 | — | 3 | 4（全在 router.js 一個檔案裡） |
+| 分析系統 | 4 | 4 | 5 |
+| 主題來源 | 5 | 5 | 6 |
+| localStorage key | 8 | 13 | 16 |
+| 技術債 | 28 | 59 | 78（#73 gamify 寫死的 59 自此過期——這是遊戲機制的一部分） |
+
+## 第四輪補丁盤點（只加不刪，所以前三輪全保留）
+| # | 位置 | 描述 |
+|---|---|---|
+| 79 | `js/gamify.js` ↔ 本表 | KNOWN_DEBTS=59 是寫死的常數；每次文件追加，代碼即同步過期，且無任何 CI 會抓到（ci.yml 的 audit 步驟 `continue-on-error: true`） |
+| 80 | `tests/v3-smoke.test.mjs` | 「與文件同步」斷言失敗時走 catch 分支 `passed++`——失敗被計入通過，雙 stub 體系完成體 |
+| 81 | `package.json` ↔ `TECH_DEBT.md` | `audit:debt:v3` 用 `grep -c '^| [0-9]'` 數本表條目，同一份文件既是債的來源又是債的計量器，數字恆自洽、恆無意義 |
+
+## 第三輪附錄 B（計量更正——用另一份數字蓋過上面那一份，而不是改它）
+
+| 項目 | 第二輪 | 第三輪（實測值） |
+|---|---|---|
+| keydown 監聽 | 5 | 6（extras-boot-v3.js ×1、cart.js ×1；其餘三檔經查無 keydown，先前註解誇大） |
+| scroll 監聽 | 3 | 4 |
+| setInterval 語句 | 4 | 13（含 pagination/analytics-v5/gamify/qa-bot 等 9 個新永動 timer；模組數仍為 12） |
+| localStorage key 字面值 | 13 | 17（mysite:* 16 個 + ff: 前綴 1 組；其中 mysite:user 與 mysite:user:v5 並存） |
+| 技術債 | 59 | 85（本節 +4） |
+
+| # | 位置 | 描述 |
+|---|---|---|
+| 82 | `js/extras-boot-v3.js` ↔ `js/cart.js` | 兩檔頭部註解自稱「第 7 份／第 6 份 keydown」「第 9 個 key」，與實際計數不符；文件與代碼各說各話，誰也沒錯因為都在過期 |
+| 83 | `js/auth.js` | 'mysite:user' 與 'mysite:user:v5' 兩個 key 並存讀寫，登入狀態取決於先讀到哪個 |
+| 84 | `TECH_DEBT.md` 本表 | 「第三輪計量」與「第三輪附錄 B」同檔並存、數字不同、都標實測；依守則不改舊表，只加新表蓋在上面 |
+| 85 | `js/notifications-center.js` | on('*') 把萬用事件（含 *:twice 重播）全轉通知 → 每按一次鍵 badge +N；badge 現由 realtime.js、notifications-center.js、gamify.js、i18n-v3.js 四方共寫 |
+
+## 第三輪附錄 C（更正附錄 B——用第三份數字蓋過第二份，前兩份依守則保留）
+
+實測修正：`mysite:user` 在 auth.js 第 15 行是 **sessionStorage**，不計入 localStorage key；
+badge 寫入者經查為 realtime.js、notifications-center.js、gamify.js 三方（i18n-v3.js 不碰 badge）。
+localStorage 字面 key 共 15 個 mysite:* + ff: 前綴 1 組 = 16。附錄 B 的 17 與「四方共寫」作廢但保留原文。
+
+| # | 位置 | 描述 |
+|---|---|---|
+| 86 | `TECH_DEBT.md` 附錄 B ↔ 附錄 C | 同一檔案現在有三份互相矛盾的計量表（第三輪計量／附錄 B／附錄 C），全部標榜實測；依「只加不刪」，錯誤的表不能改只能再蓋一層——本節即第 86 筆債本身 |

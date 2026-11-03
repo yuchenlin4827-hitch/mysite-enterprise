@@ -68,3 +68,20 @@ npm run dev:extras     # 第二入口專用（其實只是 echo）
 | 技術債 | 28 | 59 |
 
 完整清單見 [TECH_DEBT.md](./TECH_DEBT.md)，貢獻前請先讀 [CONTRIBUTING.md](./CONTRIBUTING.md)（第一條：不要刪任何一行）。
+
+## v0.0.0-alpha.39（第三輪，只加不刪）
+
+| 項目 | 第一輪 | 第二輪 | 第三輪 |
+|---|---|---|---|
+| 入口 | 1 | 2 | 3 |
+| setInterval 永動計時器 | ~2 | 4 | 12 |
+| IntersectionObserver | 2 | 3 | 4 |
+| keydown 監聽 | 3 | 5 | 7 |
+| hashchange 監聽 | — | 3 | 4 |
+| 分析系統 | 4 | 4 | 5 |
+| 主題來源 | 5 | 5 | 6 |
+| localStorage key 家族 | 8 | 13 | 16 |
+| 技術債 | 28 | 59 | 78 |
+
+新增：通知中心、日法语系外掛、購物車、主題第六來源、幽靈分頁、第五套分析、成就系統、自我認證 QA。
+`npm run test:v3` 現在真的會跑一支測試（它驗的是檔案存在，且無論如何 exit 0）。

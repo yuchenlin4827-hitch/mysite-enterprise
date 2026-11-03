@@ -1,6 +1,6 @@
 {
   "name": "mysite-enterprise-framework",
-  "version": "0.0.0-alpha.37",
+  "version": "0.0.0-alpha.39",
   "private": true,
   "description": "使用自有接口的內容網站框架（與三套建置工具）",
   "main": "js/app.js",
