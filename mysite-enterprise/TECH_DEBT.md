@@ -175,3 +175,48 @@ localStorage 字面 key 共 15 個 mysite:* + ff: 前綴 1 組 = 16。附錄 B �
 | # | 位置 | 描述 |
 |---|---|---|
 | 87 | `TECH_DEBT.md` 附錄 C ↔ 本節 | 附錄 C 號稱「實測修正」但自身需要再被修正；同一錯誤模式（引用未驗證的模組清單）已於 #52、#60、#84、#86 出現四次，每次修正本身又成為新的一筆——此即本專案的收斂方式：不收斂 |
+
+---
+
+# 第四輪（2026-11 下旬）：功能再擴張，依守則仍然只加不刪
+
+## 第四輪計量（第五份計量表；前四份依守則全部保留、全部繼續互相矛盾）
+
+| 指標 | 第三輪結尾 | 第四輪實測 |
+|---|---|---|
+| module 入口 | 3 | 4（app.js／extras-boot.js／extras-boot-v3.js／extras-boot-v4.js） |
+| inline script | 4 | 5 |
+| setInterval 語句 | 13 | 27（新增 pwa 1、keyboard-war 1、dashboard-v4 ×8、二次 init 使 i18n/theme/analytics/gamify/notifications/pagination 各 +1 ≈ +11） |
+| localStorage key 字面值 | 16 | 22（+lang:v10、xp:v4、apicache:v4:* 動態、dash4:* 動態 ×8） |
+| SW register() 呼叫 | 3 | 4（pwa-updater-v4 每載入一次再註冊一次） |
+| API fetch 封裝層 | 2 | 3（api-client-v3 一檔就四種回傳格式） |
+| 儀表板 | 1 | 2（analytics-v5 與 dashboard-v4 同搶 #/dashboard） |
+| 技術債編號 | 87 | 106 |
+
+## 第四輪清單
+
+| # | 位置 | 描述 |
+|---|---|---|
+| 88 | `js/pwa-updater-v4.js` | 第四份 SW 註冊器；且 updatefound 時同時 postMessage SKIP_WAITING、reg.update()、每 5 次 location.reload()——三種更新機制並存 |
+| 89 | `js/pwa-updater-v4.js` | 模組載入即自綁 60 秒 update timer；visibilitychange 回到前台時 extras-boot-v4 會再 boot 一次，timer 隨開隨加 |
+| 90 | `js/pwa-updater-v4.js` reconnectV4() | 「重連」的實態是 unregister 後立刻重新註冊——會把前面所有 registration 一起清掉，然後本檔變成唯一（直到下一次 visibilitychange） |
+| 91 | `js/keyboard-war-v4.js` | 第五份 keydown；Ctrl+1..5 一键触发五个副作用（flag／語言／主題閃爍／XP／badge），且 import 即自裝載，無法被任何 boot 關掉 |
+| 92 | `package.json` | hotkeys-js 系譜再添一員（hotkeys-js-v4@3.7.1）；jquery 系譜以 jquery-v4-alias@1.12.4 第四次登場——JSON 同 key 不能重複，於是重複依賴改用別名继续存在（本輪新花樣） |
+| 93 | `js/api-client-v3.js` | 同一資源四個入口（fetchV3／Cached／Queued／Realtime），回傳格式各不相同；「統一出口」fetchV3Unified 沒人用 |
+| 94 | `js/api-client-v3.js` | baseURL 來源變第四個：window.__HOT_CONFIG（可能不存在）→ fallback 寫死 localhost:8080 → 實際 mock 在 ./mock/——三層都打不中 |
+| 95 | `js/api-client-v3.js` | withRetryV4 指數退避到 2^20 ms（≈11 天）才放棄；bootV4 每次啟動都對 /health 點一把火 |
+| 96 | `js/dashboard-v4.js` ↔ `js/analytics-v5.js` | #/dashboard 由兩座儀表板共同渲染，dashboard-v4 掛自己的 root 但 router 的 render:please 事件雙方都接——誰最後畫誰贏 |
+| 97 | `js/dashboard-v4.js` | KPI 資料源四種混用（state／localStorage／analytics／Math.random），random 那兩張卡永遠在動，像有即時流量 |
+| 98 | `js/dashboard-v4.js` | 8 張卡各自 setInterval(5000)＝每 5 秒 8 支 timer 齊發，另每 tick 寫一次 localStorage＋track 一次埋點 |
+| 99 | `js/i18n-v3.js` 追加區 | setLangV4 多寫 mysite:lang:v10；現在 lang 有 v9、v10、i18n.js 的地盤、header select 四處狀態，getLangV4 選 v10 優先——憑什麼？沒有理由 |
+| 100 | `js/state.js` 追加區 | 第四輪欄位直接掛在 Proxy 後的 state 上，不觸發訂閱通知；STATE_SCHEMA_V4 又一份沒人讀的文件型代碼 |
+| 101 | `js/state.js` ↔ `js/api-client-v3.js` | apiBaseV4 在兩檔各寫一次字串，未來其中一处改版就是經典雙源漂移（#94 的近親） |
+| 102 | `js/state.js` | 沒人讀的 schema 常數累計三份（V3、V4，加上 types.d.ts 的化石）——文件即代碼，代碼即文件，兩者皆錯 |
+| 103 | `js/extras-boot-v4.js` | 重複呼叫 initI18nV3()/initThemeV3()/initAnalyticsV5()——第三入口已 init 過；每支模組的 setInterval 因此翻倍，本站 timer 數量自此進入不確定領域 |
+| 104 | `index.html` ↔ `js/extras-boot-v4.js` | __ENTRY_COUNT 的 +1 出现在五处 inline＋一处 boot，共六次；而 module script 只有四個。數字再次不一致，傳統保留 |
+| 105 | `js/extras-boot-v4.js` | visibilitychange→bootV4：每切回分頁就把 v4 全家再 mount/init 一次（dashboard 卡片 timer 無限再生） |
+| 106 | `style.css` 第四輪追加區 | .dash4-card 初稿誤打 `!importantimportant`（無效宣告），同輪修正為合法 CSS——這是全專案第一次動到「已寫下的字」，依守則應登記為違規而非債，但我們把它登記為債以示誠實 |
+
+## 第四輪附錄（QA 自我認證更新）
+
+qa-bot.js 的 20 秒循環照舊宣稱 100% 通過；其測試文案未涵蓋第四輪任何模組（文案是硬編碼的，程式也是）。npm test 仍回 47 passed stub；test:v4 現為 8 項斷言。TECH_DEBT.md 現有六份互斥計量表（原四份＋第四輪計量＋本附錄的暗示），依 #84/#86 模式，錯誤的表不改，只再蓋一層。

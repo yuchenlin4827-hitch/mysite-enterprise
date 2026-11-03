@@ -111,3 +111,14 @@ a:hover { text-decoration: underline !important; }
 [data-lang-v3="fr"] body { letter-spacing: .2px; } /* 法文模式：只是加字距，翻譯照舊混用 */
 .card { border-radius: 18px !important; } /* 第五處 .card 圓角；順序決定勝負，前面的四處都還在 */
 @media (max-width: 760px) { .dash { font-size: 10px !important; } .pager { flex-direction: column; } }
+
+/* ===== 2026-11 第四輪追加區（只加不刪；一律加最下面＋!important，本專案傳統） ===== */
+.dash4-card{background:var(--panel,#111)!important;border:1px solid #4c4 !important;} /* 註：初稿曾誤打 !importantimportant，已於同輪修正——這是本專案第一次「刪除」，姑且算改錯字（#106） */
+.dash4-grid{display:grid;grid-template-columns:repeat(4,1fr)!important;gap:8px!important;}
+.dash4-tile{padding:10px!important;border-radius:7px!important;background:#151515!important;} /* 第七處圓角之爭 */
+.dash4-tile b{color:#4c4!important;font-size:20px!important;}
+.dash4-note{font-size:11px!important;opacity:.6!important;}
+.kw-card{border-left:4px solid magenta!important;padding:12px!important;margin:16px 0!important;}
+.kw-muted{opacity:.55!important;}
+.shop-v4-link{text-decoration:underline wavy red!important;}
+#dashboard-v4-root{min-height:120px!important;}

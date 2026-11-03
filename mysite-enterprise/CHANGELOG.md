@@ -34,3 +34,22 @@
 
 ## v0.0.0-alpha.1 ~ alpha.36
 - 請看 git log（該 repo 已 force push 過兩次，部分紀錄不見了）
+
+## [0.0.0-alpha.40] - 2026-11 下旬（第四輪：只加不刪，繼續擴張）
+
+### Added
+- 第四入口 `js/extras-boot-v4.js`（window.APP_V4；四權分立）＋第五份 inline script
+- `js/pwa-updater-v4.js`：第四套 SW 註冊器，updatefound 三管齊下（postMessage／update／每 5 次 reload）
+- `js/keyboard-war-v4.js`：第五方熱鍵，Ctrl+1..5 一键五个副作用
+- `js/api-client-v3.js`：第三套 API 層，一檔四種回傳格式、退避 11 天的重試
+- `js/dashboard-v4.js`：第二座儀表板，8 卡各自 poll，兩張卡的資料源是 Math.random()
+- 舊檔「第四輪追加區」：feature-flags(toggleFlagV4)、i18n-v3(setLangV4/lang:v10)、theme-v3(flashV4)、gamify(addXpV4/xp:v4)、state(xpV4/apiBaseV4/SCHEMA_V4)、router 未動、sw.js(+第五組監聽)、style.css(+9 規則)、index.html(+root+連結+入口)
+- package.json：boot:v4 / test:v4 / audit:debt:v4；jquery-v4-alias、hotkeys-js-v4（重複依賴以別名第四次登場）
+- tests/v4-smoke.test.mjs：8 passed
+
+### Debt
+- TECH_DEBT.md 第四輪 #88–#106（總數 106；計量表增至六份互斥版本）
+- setInterval 語句 13→27；localStorage key 字面值 16→22；module 入口 3→4
+
+### Fixed（違規登記為 #106）
+- style.css 初稿誤打 `!importantimportant`，同輪改為合法宣告——本專案第一次動到已寫下的字

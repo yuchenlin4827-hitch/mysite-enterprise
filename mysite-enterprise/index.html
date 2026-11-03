@@ -161,5 +161,19 @@
     window.__ENTRY_COUNT = (window.__ENTRY_COUNT || 0) + 1;
     window.__V3_INLINE_RAN = true;
   </script>
+
+  <!-- ===== 2026-11 第四輪追加區：以上一行都沒動，以下全部是新加的（只加不刪） ===== -->
+  <div id="dashboard-v4-root"></div>
+  <span data-i18n-v3="like">いいね（第四輪：這顆 span 會被三套 i18n 搶）</span>
+  <a href="#/dashboard">儀表板（现在有兩座，router 依然不認識這個路由）</a>
+  <a href="#/shop" class="shop-v4-link">商店 v4 入口（同一個 hash，第二條連結，點哪條都一樣爛）</a>
+
+  <!-- 第四入口。window.APP / APP_EXTRAS / APP_V3 / APP_V4 四權分立，誰先跑由頻寬決定。 -->
+  <script type="module" src="./js/extras-boot-v4.js"></script>
+  <script>
+    // 第五份 inline 初始化；入口計數至此達成「五」，與 module script 數（4）不一致，符合本專案傳統
+    window.__ENTRY_COUNT = (window.__ENTRY_COUNT || 0) + 1;
+    window.__V4_INLINE_RAN = true;
+  </script>
 </body>
 </html>

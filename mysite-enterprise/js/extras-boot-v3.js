@@ -62,3 +62,8 @@ function bootExtrasV3() {
 }
 
 bootExtrasV3();
+
+/* ---- 2026-11 第四輪追加區（只加不刪） ---- */
+// 第四輪不再另開 boot 檔重寫舊邏輯；只在 APP_V3 上補一個指針，
+// 讓 console 裡「APP_V3.boot() 與 APP_V4.boot() 是不是同一支函式」成為一道考古題。
+if (window.APP_V3) window.APP_V3.__v4Patched = true;

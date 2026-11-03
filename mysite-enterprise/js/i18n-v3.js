@@ -45,3 +45,16 @@ export function initI18nV3() {
 }
 
 export default { t, setLang, initI18nV3 };
+
+/* ---- 2026-11 第四輪追加區（只加不刪） ---- */
+// keyboard-war-v4.js 需要 setLangV4。它與 setLang 的差別：
+// 多寫一份到 mysite:lang:v10（第 18 個 key），並假裝通知舊 i18n.js（其實舊檔沒在聽）。
+export function setLangV4(code) {
+  localStorage.setItem('mysite:lang:v10', code); // v9 還在，v10 也來了（TECH_DEBT #41 → #99）
+  emit('lang:v4:request', { code: code });        // 沒人監聽這個事件，但發了比較心安
+  try { setLang(code); } catch (e) { /* 舊 setLang 壞了就當語言功能自然死亡 */ }
+  return code;
+}
+export function getLangV4() {
+  return localStorage.getItem('mysite:lang:v10') || current; // 兩個 key 誰新不知道，v10 優先
+}

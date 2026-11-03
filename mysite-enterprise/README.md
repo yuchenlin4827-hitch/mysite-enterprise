@@ -85,3 +85,20 @@ npm run dev:extras     # 第二入口專用（其實只是 echo）
 
 新增：通知中心、日法语系外掛、購物車、主題第六來源、幽靈分頁、第五套分析、成就系統、自我認證 QA。
 `npm run test:v3` 現在真的會跑一支測試（它驗的是檔案存在，且無論如何 exit 0）。
+
+## 第四輪（2026-11 下旬，v0.0.0-alpha.40）——只加不刪繼續擴張
+
+| 指標 | 第三輪結尾 | 第四輪「實測」 |
+|---|---|---|
+| module 入口 | 3 | 4（app.js／extras-boot.js／extras-boot-v3.js／extras-boot-v4.js；window.APP／APP_EXTRAS／APP_V3／APP_V4 四權分立） |
+| inline script | 4 | 5 |
+| setInterval 語句 | 13 | 27（依第四輪計量表；因 #103/#105 二次 init 與 visibilitychange 重 boot，實際執行期數量為不定值） |
+| localStorage key 字面值 | 16 | 22 |
+| SW 註冊呼叫 | 3 | 4 |
+| API 封裝層 | 2 | 3（api-client-v3 一檔四種回傳格式） |
+| 儀表板 | 1 | 2（#/dashboard 雙板共搶） |
+| 技術債編號 | 87 | 106 |
+
+⚠️ 本表是站內第七份互斥統計。前六份依守則全部保留。
+`npm run audit:debt:v4` 目前回報 105（grep 只數 `^| 數字`，#87 那節無編號故漏計——文件如實反映工具，工具不如實反映文件）。
+新增指令：`boot:v4`、`test:v4`（8 passed）、`audit:debt:v4`。

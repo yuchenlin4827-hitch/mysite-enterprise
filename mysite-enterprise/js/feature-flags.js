@@ -57,3 +57,18 @@ export function isEnabled(k) { return window.FF ? window.FF.isEnabled(k) : false
 export function bucket() { return window.FF ? window.FF.bucket() : 'A'; }
 export function allFlags() { return window.FF ? window.FF.all() : {}; }
 export default { isEnabled, bucket, allFlags };
+
+/* ---- 2026-11 第四輪追加區（只加不刪；上面全部原封不動） ---- */
+// keyboard-war-v4.js 需要的橋接：把任意字串當成 flag key 去抽籤。
+// isEnabled 對未知 key 回 false，所以 toggleFlagV4「切換」的實態是寫 localStorage——
+// 但抽籤桶 bucket() 每次重抽，於是同一個 flag 的狀態取決於你最後一次看它的時機（#3 親戚）。
+export function toggleFlagV4(k) {
+  var cur = localStorage.getItem('ff:' + k);
+  var next = cur === '1' ? '0' : '1';
+  localStorage.setItem('ff:' + k, next);
+  if (window.FF) window.FF.FLAGS[k] = next === '1'; // 直接改閉包內的 FLAGS——四個來源變五個
+  return next === '1';
+}
+export function flagsSnapshotV4() {
+  return Object.assign({ __bucket: bucket(), __count: Object.keys(allFlags()).length + 5 }, allFlags());
+}

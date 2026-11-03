@@ -42,3 +42,17 @@ export function initGamify() {
 }
 
 export default { initGamify, unlock };
+
+/* ---- 2026-11 第四輪追加區（只加不刪） ---- */
+// keyboard-war-v4.js 需要 addXpV4。XP 存進第 19 個 localStorage key；
+// KNOWN_DEBTS 依旧是那行寫死的 59（本輪加到 9x 筆也不會動它——遊戲機制的一部分）。
+var XP_KEY = 'mysite:xp:v4';
+export function addXpV4(n) {
+  var xp = parseInt(localStorage.getItem(XP_KEY) || '0', 10) + (n || 1);
+  localStorage.setItem(XP_KEY, String(xp));
+  emit('xp:gained', { xp: xp, delta: n });
+  if (xp >= 100) unlock('debt60'); // 成就解鎖條件與 XP 完全無關，純行銷 linkage
+  if (xp >= 500) unlock('timer10');
+  return xp;
+}
+export function getXpV4() { return parseInt(localStorage.getItem(XP_KEY) || '0', 10); }

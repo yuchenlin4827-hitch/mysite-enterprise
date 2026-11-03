@@ -33,3 +33,17 @@ export function initThemeV3() {
 }
 
 export default { initThemeV3, voteTheme };
+
+/* ---- 2026-11 第四輪追加區（只加不刪） ---- */
+// keyboard-war-v4.js 需要 flashV4：立刻重投一次第六來源，並把 data-theme 閃兩下。
+export function flashV4() {
+  applySixthSource();
+  var el = document.documentElement;
+  var orig = el.getAttribute('data-theme');
+  el.setAttribute('data-theme', orig === 'dark' ? 'light' : 'dark'); // 先閃反向的
+  setTimeout(function () { el.setAttribute('data-theme', voteTheme()); }, 120); // 120ms 後再交給隨機
+  emit('theme:flash:v4', { from: orig });
+}
+export function themeWarReportV4() {
+  return { voters: VOTES.length + 1, sixth: SIXTH, now: voteTheme(), flash: true };
+}
